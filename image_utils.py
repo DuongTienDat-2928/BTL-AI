@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+from PIL import Image, ImageDraw, ImageFont
 
 def read_image_unicode(path):
     """
@@ -24,8 +25,23 @@ def resize_image(image, max_size=640):
 
 def draw_results_on_image(image, x, y, w, h, gender_vn, age):
     """
-    Vẽ bounding box và text lên ảnh.
+    Vẽ bounding box và text Unicode lên ảnh bằng Pillow.
     """
+    # Vẽ khung bằng OpenCV
     cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 2)
-    cv2.putText(image, f"{gender_vn}, {age}", (x, y - 10),
-                cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
+
+    # Chuyển sang PIL để vẽ text Unicode
+    img_pil = Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
+    draw = ImageDraw.Draw(img_pil)
+
+    try:
+        # Font Unicode (chỉnh path nếu cần)
+        font = ImageFont.truetype("arial.ttf", 24)
+    except:
+        font = ImageFont.load_default()
+
+    text = f"{gender_vn}, {age}"
+    draw.text((x, y - 30), text, font=font, fill=(0, 255, 0))
+
+    # Trả lại ảnh về OpenCV (BGR)
+    return cv2.cvtColor(np.array(img_pil), cv2.COLOR_RGB2BGR)

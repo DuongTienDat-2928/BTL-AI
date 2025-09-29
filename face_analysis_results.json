@@ -1,7 +1,12 @@
 [
     {
         "file_name": "Screenshot_6.png",
-        "age": "Tuổi",
+        "age": 25,
         "gender": "Nam"
+    },
+    {
+        "file_name": "Screenshot_8.png",
+        "age": 32,
+        "gender": "Nữ"
     }
 ]
